@@ -5,18 +5,32 @@ spyceship = Actor('cake')
 spyceship.bottom = HEIGHT
 spyceship.centerx = WIDTH/2
 projectiles= list()
+enemies= list()
+
+for i in range(5):
+    enemy = Actor('space-invaders')
+    enemy.top = 0
+    enemy.centerx = WIDTH/2 + 100*(i - 2)
+    enemies.append(enemy)
 
 def draw():
     screen.clear()
     spyceship.draw()
     for projectile in projectiles:
         projectile.draw()
+    for enemy in enemies:
+        enemy.draw()
 
 def update():
     for projectile in projectiles:
         projectile.y -= 10
-        if projectile.bottom <= 0:
+        i = projectile.collidelist(enemies)
+        if i != -1:
+            del enemies[i]
             projectiles.remove(projectile)
+        elif projectile.bottom <= 0:
+            projectiles.remove(projectile)
+            
 
 def on_key_down(key):
     if key ==keys.LEFT:
